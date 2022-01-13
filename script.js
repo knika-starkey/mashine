@@ -69,34 +69,36 @@ window.onload = function () {
   // let coffeeMachine = new CoffeeMachine();
   // coffeeMachine.run("латте");
 
-  function Multivariate() {
-    this.cook = "";
-    Machine.apply(this);
+  function Multivariate(info) {
+    Machine.apply(this, info);
+    this.cook;
+    let parentRun = this.run;
+
+    this.run = function (cook) {
+      try {
+        if (this.state == "started") throw new Error("Машина занята");
+        else {
+          this.cook = cook;
+          switch (this.cook) {
+            case "суп":
+              this.time = 10000;
+              break;
+            case "тушение":
+              this.time = 13000;
+              break;
+            case "выпечка":
+              this.time = 15000;
+              break;
+            default:
+              this.info.innerHTML += "Такого нет!";
+              CoffeeMachine.stop();
+          }
+          this.info.innerHTML += `Приготовление: ${this.cook} `;
+          parentRun();
+        }
+      } catch (ex) {
+        this.info.innerHTML += ex.messange;
+      }
+    };
   }
-
-  Multivariate.prototype = Object.create(Machine.prototype);
-  Multivariate.prototype.constructor = Multivariate;
-
-  Multivariate.prototype.run = function (cook) {
-    this.cook = cook;
-    switch (this.cook) {
-      case "суп":
-        this.time = 10000;
-        break;
-      case "тушение":
-        this.time = 13000;
-        break;
-      case "выпечка":
-        this.time = 15000;
-        break;
-      default:
-        document.write("Такого нет!");
-        Multivariate.stop();
-    }
-    document.write(`Приготовление: ${this.cook} `);
-    Machine.prototype.run.apply(this);
-  };
-
-  let multivariate = new Multivariate();
-  multivariate.run("суп");
 };

@@ -3,10 +3,10 @@ window.onload = function () {
     this.state = "stopped";
     this.time = 2000;
     this.info = info;
-    var timer;
-    var interval;
+    let timer;
+    let interval;
 
-    var self = this;
+    let self = this;
 
     this.run = function () {
       self.state = "started ";
@@ -34,32 +34,38 @@ window.onload = function () {
   // let machine = new Machine();
   // machine.run();
 
-  function CoffeeMachine() {
+  function CoffeeMachine(info) {
+    Machine.apply(this, info);
     this.drink = "вода";
-    Machine.apply(this);
-  }
-  CoffeeMachine.prototype = Object.create(Machine.prototype);
-  CoffeeMachine.prototype.constructor = CoffeeMachine;
+    let parentRun = this.run;
 
-  CoffeeMachine.prototype.run = function (drink = "вода") {
-    this.drink = drink;
-    switch (this.drink) {
-      case "латте":
-        this.time = 5000;
-        break;
-      case "эспрессо":
-        this.time = 3000;
-        break;
-      case "американо":
-        this.time = 3500;
-        break;
-      default:
-        document.write("Такого напитка нет!");
-        CoffeeMachine.stop();
-    }
-    document.write(`Приготовление: ${this.drink} `);
-    Machine.prototype.run.apply(this);
-  };
+    this.run = function (drink = "вода") {
+      try {
+        if (this.state == "started") throw new Error("Машина занята");
+        else {
+          this.drink = drink;
+          switch (this.drink) {
+            case "латте":
+              this.time = 5000;
+              break;
+            case "эспрессо":
+              this.time = 3000;
+              break;
+            case "американо":
+              this.time = 3500;
+              break;
+            default:
+              this.info.innerHTML += "Такого напитка нет!";
+              CoffeeMachine.stop();
+          }
+          this.info.innerHTML += `Приготовление: ${this.drink} `;
+          parentRun();
+        }
+      } catch (ex) {
+        this.info.innerHTML += ex.messange;
+      }
+    };
+  }
   // let coffeeMachine = new CoffeeMachine();
   // coffeeMachine.run("латте");
 

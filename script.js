@@ -2,7 +2,7 @@ window.onload = function () {
   function Machine(info) {
     this.state = "stopped";
     this.time = 2000;
-    this.info = info;
+    info = document.getElementById("info");
     let timer;
     let interval;
 
@@ -10,25 +10,26 @@ window.onload = function () {
     function onReady() {
       clearInterval(interval);
       clearTimeout(timer);
-      document.write("Готово!");
       self.state = "stopped";
-      document.write(self.state);
+      info.innerHTML += `Готово! ${self.state}`;
     }
 
     this.run = function () {
       self.state = "started ";
-      document.write("Начинаю работу... ");
-      document.write(`Время приготовдения - ${self.time} `);
-      interval = setInterval(() => document.write(" | "), 1000);
+      info.innerHTML += "Начинаю работу... ";
+      info.innerHTML += `Время приготовдения - ${self.time} `;
+      interval = setInterval(function () {
+        this.info.innerHTML += " | ";
+      }, 1000);
       timer = setTimeout(onReady, self.time);
-      document.write(self.state);
+      info.innerHTML += self.state;
     };
 
     this.stop = function () {
       clearInterval(interval);
       clearTimeout(timer);
       self.state = "stopped";
-      document.write(`принудительное выключение! ${self.state} `);
+      info.innerHTML += `принудительное выключение! ${self.state} `;
     };
   }
   // let machine = new Machine();
@@ -41,8 +42,10 @@ window.onload = function () {
 
     this.run = function (drink = "вода") {
       try {
-        if (this.state == "started") throw new Error("Машина занята");
-        else {
+        if (this.state == "started") {
+          throw new Error("Машина занята");
+        } else {
+          info.innerHTML += `Приготовление: ${this.drink} `;
           this.drink = drink;
           switch (this.drink) {
             case "латте":
@@ -55,14 +58,13 @@ window.onload = function () {
               this.time = 3500;
               break;
             default:
-              document.write("Такого напитка нет!");
+              info.innerHTML = "Такого напитка нет!";
               CoffeeMachine.stop();
           }
-          document.write(`Приготовление: ${this.drink} `);
           parentRun();
         }
       } catch (ex) {
-        document.write(ex.messange);
+        info.innerHTML += ex.messange;
       }
     };
   }
@@ -90,14 +92,14 @@ window.onload = function () {
               this.time = 15000;
               break;
             default:
-              document.write("Такого нет!");
+              info.innerHTML = "Такого нет!";
               CoffeeMachine.stop();
           }
-          document.write(`Приготовление: ${this.cook} `);
+          info.innerHTML += `Приготовление: ${this.cook} `;
           parentRun();
         }
       } catch (ex) {
-        document.write(ex.messange);
+        info.innerHTML += ex.messange;
       }
     };
   }

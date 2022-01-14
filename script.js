@@ -7,28 +7,28 @@ window.onload = function () {
     let interval;
 
     let self = this;
-
-    this.run = function () {
-      self.state = "started ";
-      this.info.innerHTML += "Начинаю работу... ";
-      this.info.innerHTML += `Время приготовдения - ${self.time} `;
-      interval = setInterval(() => (this.info.innerHTML += " | "), 1000);
-      timer = setTimeout(onReady, this.time);
-      this.info.innerHTML += self.state;
-    };
-
     function onReady() {
       clearInterval(interval);
       clearTimeout(timer);
-      this.info.innerHTML += "Готово!";
+      document.write("Готово!");
       self.state = "stopped";
-      this.info.innerHTML += self.state;
+      document.write(self.state);
     }
+
+    this.run = function () {
+      self.state = "started ";
+      document.write("Начинаю работу... ");
+      document.write(`Время приготовдения - ${self.time} `);
+      interval = setInterval(() => document.write(" | "), 1000);
+      timer = setTimeout(onReady, self.time);
+      document.write(self.state);
+    };
+
     this.stop = function () {
       clearInterval(interval);
       clearTimeout(timer);
       self.state = "stopped";
-      this.info.innerHTML += `принудительное выключение! ${self.state} `;
+      document.write(`принудительное выключение! ${self.state} `);
     };
   }
   // let machine = new Machine();
@@ -55,14 +55,14 @@ window.onload = function () {
               this.time = 3500;
               break;
             default:
-              this.info.innerHTML += "Такого напитка нет!";
+              document.write("Такого напитка нет!");
               CoffeeMachine.stop();
           }
-          this.info.innerHTML += `Приготовление: ${this.drink} `;
+          document.write(`Приготовление: ${this.drink} `);
           parentRun();
         }
       } catch (ex) {
-        this.info.innerHTML += ex.messange;
+        document.write(ex.messange);
       }
     };
   }
@@ -71,7 +71,7 @@ window.onload = function () {
 
   function Multivariate(info) {
     Machine.apply(this, info);
-    this.cook;
+    this.cook = "";
     let parentRun = this.run;
 
     this.run = function (cook) {
@@ -90,15 +90,41 @@ window.onload = function () {
               this.time = 15000;
               break;
             default:
-              this.info.innerHTML += "Такого нет!";
+              document.write("Такого нет!");
               CoffeeMachine.stop();
           }
-          this.info.innerHTML += `Приготовление: ${this.cook} `;
+          document.write(`Приготовление: ${this.cook} `);
           parentRun();
         }
       } catch (ex) {
-        this.info.innerHTML += ex.messange;
+        document.write(ex.messange);
       }
     };
   }
+
+  // кнопки
+  let info = document.getElementById("info");
+  let latte = document.getElementById("latte");
+  let espresso = document.getElementById("espresso");
+  let americano = document.getElementById("americano");
+  let stopCoffee = document.getElementById("stopCoffee");
+
+  let machine = new Machine(info);
+  let coffeeMachine = new CoffeeMachine(info);
+
+  latte.addEventListener("click", function () {
+    coffeeMachine.run("латте");
+  });
+
+  espresso.addEventListener("click", function () {
+    coffeeMachine.run("эспрессо");
+  });
+
+  americano.addEventListener("click", function () {
+    coffeeMachine.run("американо");
+  });
+
+  stopCoffee.addEventListener("click", function () {
+    coffeeMachine.stop();
+  });
 };

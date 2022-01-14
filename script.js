@@ -41,31 +41,32 @@ window.onload = function () {
     let parentRun = this.run;
 
     this.run = function (drink = "вода") {
-      try {
-        if (this.state == "started") {
-          throw new Error("Машина занята");
-        } else {
-          info.innerHTML += `Приготовление: ${this.drink} `;
-          this.drink = drink;
-          switch (this.drink) {
-            case "латте":
-              this.time = 5000;
-              break;
-            case "эспрессо":
-              this.time = 3000;
-              break;
-            case "американо":
-              this.time = 3500;
-              break;
-            default:
-              info.innerHTML = "Такого напитка нет!";
-              CoffeeMachine.stop();
-          }
-          parentRun();
-        }
-      } catch (ex) {
-        info.innerHTML += ex.messange;
+      // try {
+      //   if (this.state == "started") {
+      //     throw new Error("Машина занята");
+      //   } else {
+
+      this.drink = drink;
+      info.innerHTML += `Приготовление: ${this.drink} `;
+      switch (this.drink) {
+        case "латте":
+          this.time = 5000;
+          break;
+        case "эспрессо":
+          this.time = 3000;
+          break;
+        case "американо":
+          this.time = 3500;
+          break;
+        default:
+          info.innerHTML = "Такого напитка нет!";
+          CoffeeMachine.stop();
       }
+      parentRun();
+      //   }
+      // } catch (ex) {
+      //   info.innerHTML += ex.messange;
+      // }
     };
   }
   // let coffeeMachine = new CoffeeMachine();
@@ -77,34 +78,36 @@ window.onload = function () {
     let parentRun = this.run;
 
     this.run = function (cook) {
-      try {
-        if (this.state == "started") throw new Error("Машина занята");
-        else {
-          this.cook = cook;
-          switch (this.cook) {
-            case "суп":
-              this.time = 10000;
-              break;
-            case "тушение":
-              this.time = 13000;
-              break;
-            case "выпечка":
-              this.time = 15000;
-              break;
-            default:
-              info.innerHTML = "Такого нет!";
-              CoffeeMachine.stop();
-          }
-          info.innerHTML += `Приготовление: ${this.cook} `;
-          parentRun();
-        }
-      } catch (ex) {
-        info.innerHTML += ex.messange;
+      // try {
+      //   if (this.state == "started") {
+      //     throw new Error("Машина занята");
+      //   } else {
+
+      this.cook = cook;
+      info.innerHTML += `Приготовление: ${this.cook} `;
+      switch (this.cook) {
+        case "суп":
+          this.time = 10000;
+          break;
+        case "тушение":
+          this.time = 13000;
+          break;
+        case "выпечка":
+          this.time = 15000;
+          break;
+        default:
+          info.innerHTML = "Такого нет!";
+          Multivariate.stop();
       }
+      parentRun();
+      //   }
+      // } catch (ex) {
+      //   info.innerHTML += ex.messange;
+      // }
     };
   }
 
-  // кнопки
+  // кнопки Кофе
   let info = document.getElementById("info");
   let latte = document.getElementById("latte");
   let espresso = document.getElementById("espresso");
@@ -113,6 +116,7 @@ window.onload = function () {
 
   let machine = new Machine(info);
   let coffeeMachine = new CoffeeMachine(info);
+  let multivariate = new Multivariate(info);
 
   latte.addEventListener("click", function () {
     coffeeMachine.run("латте");
@@ -128,5 +132,26 @@ window.onload = function () {
 
   stopCoffee.addEventListener("click", function () {
     coffeeMachine.stop();
+  });
+  //кнопки Мультиварки
+  let soup = document.getElementById("soup");
+  let stewing = document.getElementById("stewing");
+  let baking = document.getElementById("baking");
+  let stopMultivariate = document.getElementById("stopMultivariate");
+
+  soup.addEventListener("click", function () {
+    multivariate.run("суп");
+  });
+
+  stewing.addEventListener("click", function () {
+    multivariate.run("тушение");
+  });
+
+  baking.addEventListener("click", function () {
+    multivariate.run("выпечка");
+  });
+
+  stopMultivariate.addEventListener("click", function () {
+    multivariate.stop();
   });
 };
